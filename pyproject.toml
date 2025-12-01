@@ -1,0 +1,12 @@
+[project]
+name = "kv-fusion"
+version = "0.1.0"
+description = "Toy-scale KV-cache fusion between two small language models, in MLX"
+requires-python = ">=3.10"
+dependencies = ["mlx>=0.22", "numpy"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
