@@ -30,7 +30,7 @@ def train_lm(model, world, role, steps, batch=128, lr=2e-3, seed=0, log=None):
     return model
 
 
-def train_fuser(fuser, receiver, sharer, world, steps, batch=128, lr=2e-3, seed=0, log=None):
+def train_fuser(fuser, receiver, sharer, world, steps, batch=128, lr=2e-3, seed=0, receiver_fraction=0.0, log=None):
     """Train only the fuser: the receiver predicts the answer from the fused cache."""
     rng = np.random.default_rng(seed)
     opt = optim.AdamW(learning_rate=optim.cosine_decay(lr, steps), weight_decay=0.0)
@@ -42,7 +42,7 @@ def train_fuser(fuser, receiver, sharer, world, steps, batch=128, lr=2e-3, seed=
     step = nn.value_and_grad(fuser, loss_fn)
     for i in range(1, steps + 1):
         fuser.tau = anneal(i, steps)
-        prompt, target = fuser_batch(world, rng, batch)
+        prompt, target = fuser_batch(world, rng, batch, receiver_fraction)
         loss, grads = step(fuser, prompt, target)
         grads, _ = optim.clip_grad_norm(grads, 1.0)
         opt.update(fuser, grads)

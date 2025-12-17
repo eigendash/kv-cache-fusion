@@ -119,8 +119,15 @@ def lm_batch(world, role, rng, batch):
     return mx.array(tokens), mx.array(mask)
 
 
-def fuser_batch(world, rng, batch):
-    entities = rng.choice(world.fuser_train, batch)
+def fuser_batch(world, rng, batch, receiver_fraction=0.0):
+    """Questions for fuser training.
+
+    By default every question is about the sharer's facts. With `receiver_fraction` > 0
+    that share of the batch asks about the receiver's own facts instead, which the
+    sharer cannot answer, so the fuser has to learn when not to inject anything.
+    """
+    n_own = int(round(batch * receiver_fraction))
+    entities = np.concatenate([rng.choice(world.fuser_train, batch - n_own), rng.choice(world.receiver, n_own)])
     return question_prompt(entities), mx.array(value_token(world.attribute[entities]).astype(np.int32))
 
 

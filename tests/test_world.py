@@ -52,3 +52,22 @@ def test_models_are_never_trained_on_the_other_models_facts():
         ent = (row[1] - SYLLABLE0) * N_SYLLABLES + (row[2] - SYLLABLE0)
         assert ent in set(w.sharer)
     assert N_VALUES == 24 and PAD == 0
+
+
+def test_fuser_batches_can_mix_in_the_receivers_own_questions():
+    from kv_fusion.world import SYLLABLE0, N_SYLLABLES, fuser_batch
+
+    w = World.make(seed=5)
+    rng = np.random.default_rng(0)
+
+    def entities(prompt):
+        p = np.array(prompt)
+        return (p[:, 1] - SYLLABLE0) * N_SYLLABLES + (p[:, 2] - SYLLABLE0)
+
+    only_sharer, _ = fuser_batch(w, rng, 64)
+    assert set(entities(only_sharer)) <= set(w.fuser_train)
+    mixed, targets = fuser_batch(w, rng, 64, receiver_fraction=0.5)
+    ents = entities(mixed)
+    assert sum(e in set(w.receiver) for e in ents) == 32
+    assert not set(ents) & set(w.fuser_test)
+    assert (np.array(targets) == VALUE0 + w.attribute[ents]).all()
