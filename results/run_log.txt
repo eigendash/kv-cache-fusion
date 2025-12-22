@@ -1,0 +1,108 @@
+training sharer (knows set A)
+  sharer step   500  loss 0.0004
+  sharer step  1000  loss 0.0002
+  sharer step  1500  loss 0.0001
+  sharer step  2000  loss 0.0001
+  sharer step  2500  loss 0.0001
+  sharer step  3000  loss 0.0000
+  sharer step  3500  loss 0.0000
+  sharer step  4000  loss 0.0000
+training receiver (knows set B, can read context)
+  receiver step   500  loss 0.0004
+  receiver step  1000  loss 0.0002
+  receiver step  1500  loss 0.0001
+  receiver step  2000  loss 0.0001
+  receiver step  2500  loss 0.0001
+  receiver step  3000  loss 0.0001
+  receiver step  3500  loss 0.0001
+  receiver step  4000  loss 0.0000
+training fuser (terminal, sharer questions only, seed 0)
+  fuser step   500  loss 0.0182  tau 0.68
+  fuser step  1000  loss 0.0047  tau 0.46
+  fuser step  1500  loss 0.0018  tau 0.32
+  fuser step  2000  loss 0.0010  tau 0.22
+  fuser step  2500  loss 0.0107  tau 0.15
+  fuser step  3000  loss 0.0012  tau 0.10
+training fuser (terminal, sharer questions only, seed 1)
+  fuser step   500  loss 0.0077  tau 0.68
+  fuser step  1000  loss 0.0021  tau 0.46
+  fuser step  1500  loss 0.0061  tau 0.32
+  fuser step  2000  loss 0.0020  tau 0.22
+  fuser step  2500  loss 0.0013  tau 0.15
+  fuser step  3000  loss 0.0021  tau 0.10
+training fuser (terminal, sharer questions only, seed 2)
+  fuser step   500  loss 0.0036  tau 0.68
+  fuser step  1000  loss 0.0029  tau 0.46
+  fuser step  1500  loss 0.0014  tau 0.32
+  fuser step  2000  loss 0.0047  tau 0.22
+  fuser step  2500  loss 0.0034  tau 0.15
+  fuser step  3000  loss 0.0012  tau 0.10
+training fuser (terminal, plus receiver's own questions, seed 0)
+  fuser step   500  loss 0.0130  tau 0.68
+  fuser step  1000  loss 0.0096  tau 0.46
+  fuser step  1500  loss 0.0084  tau 0.32
+  fuser step  2000  loss 0.0027  tau 0.22
+  fuser step  2500  loss 0.0135  tau 0.15
+  fuser step  3000  loss 0.0028  tau 0.10
+training fuser (terminal, plus receiver's own questions, seed 1)
+  fuser step   500  loss 0.0276  tau 0.68
+  fuser step  1000  loss 0.0077  tau 0.46
+  fuser step  1500  loss 0.0120  tau 0.32
+  fuser step  2000  loss 0.0064  tau 0.22
+  fuser step  2500  loss 0.0044  tau 0.15
+  fuser step  3000  loss 0.0077  tau 0.10
+training fuser (terminal, plus receiver's own questions, seed 2)
+  fuser step   500  loss 0.0177  tau 0.68
+  fuser step  1000  loss 0.0096  tau 0.46
+  fuser step  1500  loss 0.0040  tau 0.32
+  fuser step  2000  loss 0.0148  tau 0.22
+  fuser step  2500  loss 0.0104  tau 0.15
+  fuser step  3000  loss 0.0036  tau 0.10
+training fuser (depth-matched, plus receiver's own questions, seed 0)
+  fuser step   500  loss 0.0356  tau 0.68
+  fuser step  1000  loss 0.0156  tau 0.46
+  fuser step  1500  loss 0.0210  tau 0.32
+  fuser step  2000  loss 0.0049  tau 0.22
+  fuser step  2500  loss 0.0381  tau 0.15
+  fuser step  3000  loss 0.0059  tau 0.10
+training fuser (depth-matched, plus receiver's own questions, seed 1)
+  fuser step   500  loss 0.0881  tau 0.68
+  fuser step  1000  loss 0.0192  tau 0.46
+  fuser step  1500  loss 0.0139  tau 0.32
+  fuser step  2000  loss 0.0297  tau 0.22
+  fuser step  2500  loss 0.0070  tau 0.15
+  fuser step  3000  loss 0.0137  tau 0.10
+training fuser (depth-matched, plus receiver's own questions, seed 2)
+  fuser step   500  loss 0.0241  tau 0.68
+  fuser step  1000  loss 0.0203  tau 0.46
+  fuser step  1500  loss 0.0088  tau 0.32
+  fuser step  2000  loss 0.0270  tau 0.22
+  fuser step  2500  loss 0.0109  tau 0.15
+  fuser step  3000  loss 0.0072  tau 0.10
+
+chance is 0.042; fuser rows are mean +- std over 3 fuser seeds
+
+baselines (no fuser):
+
+| questions about | receiver alone | sharer alone | text-to-text |
+|---|---:|---:|---:|
+| sharer's facts, unseen by fuser | 0.062 | 1.000 | 1.000 |
+| sharer's facts, seen by fuser | 0.021 | 1.000 | 1.000 |
+| receiver's own facts | 1.000 | 0.023 | 0.023 |
+
+cache-to-cache:
+
+| fuser trained with | questions about | C2C | C2C with mismatched sharer cache |
+|---|---|---:|---:|
+| terminal, sharer questions only | sharer's facts, unseen by fuser | 0.552 +- 0.097 | 0.031 +- 0.026 |
+| terminal, sharer questions only | sharer's facts, seen by fuser | 1.000 +- 0.000 | 0.090 +- 0.010 |
+| terminal, sharer questions only | receiver's own facts | 0.029 +- 0.013 | 0.078 +- 0.006 |
+| terminal, plus receiver's own questions | sharer's facts, unseen by fuser | 0.271 +- 0.053 | 0.010 +- 0.015 |
+| terminal, plus receiver's own questions | sharer's facts, seen by fuser | 1.000 +- 0.000 | 0.104 +- 0.009 |
+| terminal, plus receiver's own questions | receiver's own facts | 1.000 +- 0.000 | 0.279 +- 0.013 |
+| depth-matched, plus receiver's own questions | sharer's facts, unseen by fuser | 0.208 +- 0.078 | 0.031 +- 0.026 |
+| depth-matched, plus receiver's own questions | sharer's facts, seen by fuser | 1.000 +- 0.000 | 0.080 +- 0.018 |
+| depth-matched, plus receiver's own questions | receiver's own facts | 1.000 +- 0.000 | 0.266 +- 0.033 |
+open gates per layer (keys, values), terminal, sharer questions only, seed 0: [(True, True), (True, True), (True, True)]
+open gates per layer (keys, values), terminal, plus receiver's own questions, seed 0: [(False, True), (True, True), (True, True)]
+open gates per layer (keys, values), depth-matched, plus receiver's own questions, seed 0: [(False, True), (True, True), (True, True)]
